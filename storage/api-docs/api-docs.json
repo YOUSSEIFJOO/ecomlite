@@ -1,0 +1,487 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User Login",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "secret_api_key": {
+                                        "type": "string",
+                                        "example": "The secret api key"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "your_password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "message": "Success",
+                                    "data": {
+                                        "token": "the_token",
+                                        "user": {
+                                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                                            "name": "John Doe",
+                                            "email": "user@example.com"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "Unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "email": [
+                                            "The email field is required"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "Server Error",
+                                    "data": []
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Store details of an order",
+                "operationId": "2123ba58dadb22bd6f2c8081af562230",
+                "requestBody": {
+                    "description": "Order data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "products"
+                                ],
+                                "properties": {
+                                    "secret_api_key": {
+                                        "description": "The secret api key",
+                                        "type": "string"
+                                    },
+                                    "products": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "id",
+                                                "quantity"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Product ID",
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "quantity": {
+                                                    "description": "2",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The details of stored order",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "message": "Success",
+                                    "data": {
+                                        "order_id": "9073ce10-8f19-11ef-a061-5b53d1e59c8b"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "products": [
+                                            "The products field is required"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "Server Error",
+                                    "data": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Retrieve details of an order",
+                "operationId": "88d27387b1e409e075c18609d4a0c300",
+                "parameters": [
+                    {
+                        "name": "secret_api_key",
+                        "in": "query",
+                        "description": "The secret api key",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "The secret api key"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The id of the order",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "a6f10f30-909e-11ef-8061-172d99c0bf7d"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The details of an order",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "message": "Success",
+                                    "data": {
+                                        "id": "9073ce10-8f19-11ef-a061-5b53d1e59c8b",
+                                        "user": {
+                                            "id": "9073ce10-8f19-11ef-a061-5b53d1e59c8b",
+                                            "name": "Test User"
+                                        },
+                                        "total_price": 199.99,
+                                        "stock": 20,
+                                        "products": [
+                                            {
+                                                "id": "550e8400-e29b-41d4-a716-446655440000",
+                                                "name": "Electronics",
+                                                "quantity": 5
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "Server Error",
+                                    "data": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Retrieve a list of products",
+                "operationId": "d97d1c3727cbac49708b85f7d11f7d58",
+                "parameters": [
+                    {
+                        "name": "secret_api_key",
+                        "in": "query",
+                        "description": "The secret api key",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "The secret api key"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Product name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255,
+                            "example": "Product Name"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "description": "Minimum price",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d{1,8}(\\.\\d{1,2})?$",
+                            "example": "10.00"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Maximum price",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d{1,8}(\\.\\d{1,2})?$",
+                            "example": "100.00"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of products",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "message": "Success",
+                                    "data": [
+                                        {
+                                            "id": "9073ce10-8f19-11ef-a061-5b53d1e59c8b",
+                                            "name": "Apple iPhone 13 Pro",
+                                            "price": 19.99,
+                                            "stock": 20,
+                                            "category": {
+                                                "id": "550e8400-e29b-41d4-a716-446655440000",
+                                                "name": "Electronics"
+                                            }
+                                        }
+                                    ],
+                                    "meta": {
+                                        "next_cursor": "eyJpZCI6M30",
+                                        "prev_cursor": null,
+                                        "total_items": 100
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "The name format not valid"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": false,
+                                    "message": "Server Error",
+                                    "data": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
